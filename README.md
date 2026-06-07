@@ -1,6 +1,14 @@
-# Void Velocity
+# Space Cargo Runner
 
 Playable MVP prototype for a legal-safe, skill-based endless runner designed for Telegram Mini App and regular web play.
+
+## Play on Telegram (24/7 Live)
+
+The game is deployed to GitHub Pages and integrated with a Telegram Bot:
+* **Telegram Bot**: [@voidvelocity_bot](https://t.me/voidvelocity_bot)
+* **Live Web App Link**: [https://krrish41.github.io/Void-Velocity/](https://krrish41.github.io/Void-Velocity/)
+
+To play, search for `@voidvelocity_bot` in Telegram on your phone or laptop, open the chat, and click the **Play Game** button in the bottom-left menu area.
 
 ## Run Locally
 
