@@ -69,30 +69,4 @@ node scripts/set-menu-button.js <TARGET_URL>
 File: [scripts/tunnel-manager.js](file:///c:/Users/Krrish/Documents/Void%20Velocity/scripts/tunnel-manager.js)
 Spawns a local `localhost.run` SSH tunnel, listens for URL changes, programmatically updates the bot button, and fires a keep-alive ping request every 20 seconds to keep local ports exposed during active debugging sessions.
 
----
 
-## 5. Upcoming Milestones & Production Roadmap
-
-As the project advances from Week 1 (Static Vertical Slice) to subsequent milestones:
-
-```mermaid
-gantt
-    title Space Cargo Runner Production Roadmap
-    dateFormat  YYYY-MM-DD
-    section Week 2: Backend
-    User Persistence & Auth Setup       :2026-06-08, 3d
-    Express API & PostgreSQL Setup      :3d
-    Server-side Score Validation        :2d
-    section Week 3: Retention
-    Daily Mission Refresh Engine        :2026-06-16, 3d
-    Achievements & Login Streaks        :3d
-    Leaderboards Ingestion (Weekly)     :2d
-    section Week 4: Operations
-    Admin Telemetry Config Panel        :2026-06-24, 4d
-    Production Deployment Pipeline      :3d
-```
-
-### Key Focus Areas:
-1. **Transition to Phaser + React**: Refactor the Canvas rendering scene into a modular Phaser 3 structure, wrapping it in a React app shell to support more complex UI elements, tabs, and sound management.
-2. **Server Score Validation**: Implement seed-based verification to prevent clients from spoofing distances, speeds, or pickup counts.
-3. **Database Schema Integration**: Deploy the database schema described in [docs/mvp-plan.md](file:///c:/Users/Krrish/Documents/Void%20Velocity/docs/mvp-plan.md) to persist scores, materials, and coin balances on a remote PostgreSQL database rather than local client storage.
