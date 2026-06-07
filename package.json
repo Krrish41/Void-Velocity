@@ -1,0 +1,13 @@
+{
+  "name": "void-velocity",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playable MVP prototype for Void Velocity, optimized for Telegram Mini App and web.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check src/main.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
