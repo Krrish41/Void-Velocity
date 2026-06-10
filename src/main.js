@@ -98,7 +98,7 @@ function createRun() {
     spawnTimer: 0.75,
     pickupTimer: 0,
     hitFlash: 0,
-    collected: { cargo: 0, crystal: 0, tech: 0, fuel: 0 },
+    collected: { cargo: 0, crystal: 0, tech: 0, fuel: 0, repair: 0 },
     boostUses: 0,
     hazardsHit: 0,
     ship: { x: 0.5, y: 0.8, vx: 0 },
@@ -212,13 +212,30 @@ function showHowTo() {
   helpOpen = true;
   ui.overlayTitle.textContent = "How to Play";
   ui.overlayCopy.innerHTML = `
-    <ul>
-      <li>Hold the left or right side of the screen to slide the ship.</li>
-      <li>Collect cargo, crystals, tech, and fuel tanks.</li>
-      <li>Dodge asteroids, satellites, mines, and laser barriers.</li>
-      <li>Boost only when there is space ahead because it burns fuel faster.</li>
-      <li>Use Shield before a tight gap to absorb one bad hit.</li>
-    </ul>
+    <div style="font-size: 0.88rem; line-height: 1.45;">
+      <p style="margin: 0 0 10px 0;">Hold the left or right side of the screen to steer the ship.</p>
+      
+      <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--cyan); margin-top: 10px; letter-spacing: 0.05em;">WHAT TO COLLECT:</div>
+      <div class="help-grid">
+        <div class="help-card"><span class="badge cargo"><span class="shape-container"><span class="shape-icon cargo"></span></span> Cargo</span><span>Adds points & weight</span></div>
+        <div class="help-card"><span class="badge crystal"><span class="shape-container"><span class="shape-icon crystal"></span></span> Crystal</span><span>Upgrade material</span></div>
+        <div class="help-card"><span class="badge tech"><span class="shape-container"><span class="shape-icon tech"></span></span> Tech</span><span>Rare upgrade tech</span></div>
+        <div class="help-card"><span class="badge fuel"><span class="shape-container"><span class="shape-icon fuel"></span></span> Fuel Tank</span><span>Restores fuel (+24%)</span></div>
+        <div class="help-card"><span class="badge repair"><span class="shape-container"><span class="shape-icon repair"></span></span> Repair Kit</span><span>Fixes hull (+25%)</span></div>
+      </div>
+      
+      <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--rose); margin-top: 12px; letter-spacing: 0.05em;">WHAT TO DODGE:</div>
+      <div class="help-grid">
+        <div class="help-card"><span class="badge asteroid"><span class="shape-container"><span class="shape-icon asteroid"></span></span> Asteroid</span><span>Deals physical crash damage</span></div>
+        <div class="help-card"><span class="badge satellite"><span class="shape-container"><span class="shape-icon satellite"></span></span> Satellite</span><span>Drains shield, power & fuel</span></div>
+        <div class="help-card"><span class="badge mine"><span class="shape-container"><span class="shape-icon mine"></span></span> Space Mine</span><span>Detonates for heavy damage</span></div>
+        <div class="help-card"><span class="badge laser"><span class="shape-container"><span class="shape-icon laser"></span></span> Laser Grid</span><span>Extreme thermal damage</span></div>
+      </div>
+
+      <p style="margin: 12px 0 0 0; font-size: 0.8rem; color: var(--muted);">
+        💡 <b>Boost</b> uses speed but burns fuel. <b>Shield</b> absorbs one crash.
+      </p>
+    </div>
   `;
   ui.startButton.textContent = resumeAfterHelp ? "Resume Run" : "Start Run";
   ui.howToButton.textContent = "Back";
@@ -322,12 +339,12 @@ function spawnHazard() {
 
 function spawnPickup() {
   const roll = Math.random();
-  const type = roll > 0.91 ? "fuel" : roll > 0.78 ? "tech" : roll > 0.56 ? "crystal" : "cargo";
+  const type = roll > 0.94 ? "repair" : roll > 0.86 ? "fuel" : roll > 0.74 ? "tech" : roll > 0.54 ? "crystal" : "cargo";
   game.pickups.push({
     type,
     x: 0.08 + Math.random() * 0.84,
     y: -0.08,
-    r: type === "fuel" ? 17 : 13,
+    r: (type === "fuel" || type === "repair") ? 17 : 13,
     phase: Math.random() * Math.PI * 2
   });
 }
@@ -437,6 +454,11 @@ function collectPickup(pickup) {
   if (pickup.type === "fuel") {
     game.collected.fuel += 1;
     game.fuel = Math.min(getStats().maxFuel, game.fuel + 24);
+    return;
+  }
+  if (pickup.type === "repair") {
+    game.collected.repair += 1;
+    game.hull = Math.min(100, game.hull + 25);
     return;
   }
   if (game.cargo >= game.cargoLimit) return;
@@ -582,6 +604,13 @@ function drawPickup(pickup, width, height) {
     ctx.fill();
     ctx.fillStyle = "#031116";
     ctx.fillRect(-6, -8, 12, 16);
+  } else if (pickup.type === "repair") {
+    ctx.fillStyle = "#ff6b7a";
+    roundRect(-14, -14, 28, 28, 5);
+    ctx.fill();
+    ctx.fillStyle = "#edf6fb";
+    ctx.fillRect(-3, -9, 6, 18);
+    ctx.fillRect(-9, -3, 18, 6);
   } else if (pickup.type === "crystal") {
     ctx.fillStyle = "#38d6e8";
     ctx.beginPath();

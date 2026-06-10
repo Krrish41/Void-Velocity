@@ -26,6 +26,28 @@ Open `http://localhost:4173`.
 - Mobile: hold the left or right half of the playfield, then use the Boost and Shield buttons.
 - Tap `?` or `How to Play` for the in-game guide.
 
+## Gameplay Mechanics
+
+### Pickups & Economy
+- **Cargo (📦 Crate):** Earns **+6 Coins** and **+5 XP** at the end of the run.
+- **Crystal (💎 Cyan Diamond):** Earns **+10 Coins**, **+8 XP**, and **+1 Material**.
+- **Rare Upgrade Tech (⚙️ Gold Component):** Earns **+18 Coins**, **+12 XP**, and **+3 Materials** (rare component for upgrading).
+- **Fuel Tank (⛽ Green Canister):** Restores **+24%** of your ship's fuel tank capacity. Does not occupy cargo space.
+- **Repair Kit (🔧 Red Medkit):** Restores **+25%** of your ship's hull integrity. Does not occupy cargo space.
+
+### Cargo Bay Capacity Limit
+- Your ship starts with a Cargo Bay capacity (e.g., **`8/8`**).
+- All scoring items (Cargo, Crystals, and Tech) occupy 1 slot in your Cargo Bay.
+- **Once your Cargo Bay is full, you cannot pick up any more score-bearing items** for the rest of the run. Fuel and Repair Kits can still be collected.
+- Upgrade the **Cargo Bay** in the upgrades menu using coins to increase your capacity by **+1** per level.
+
+### Hazards & Obstacles
+- **Asteroids (🪨 Grey Rock):** Basic obstacle. Deals **-20 Hull** damage on collision.
+- **Satellites (🛰️ Central pod with purple panels):** Advanced obstacle with box collision. Deals **-20 Hull** damage and drains **-18 Fuel**.
+- **Space Mines (💥 Red Spiked Orb):** High-damage hazard. Detonates for **-35 Hull** damage on contact.
+- **Laser Grids (⚡ Glowing Red Line):** Horizontal barrier with box collision. Deals **-25 Hull** damage.
+
+
 ## MVP Scope
 
 - Endless canvas runner with automatic forward acceleration
