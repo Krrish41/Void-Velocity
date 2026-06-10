@@ -678,6 +678,9 @@ function renderGameUi() {
   ui.cargo.textContent = `${game.cargo}/${game.cargoLimit}`;
   ui.boostButton.disabled = !game.active || game.paused || game.boostCooldown > 0;
   ui.shieldButton.disabled = !game.active || game.paused || game.shieldCooldown > 0;
+  
+  // Toggle help button visibility based on whether a run is actively playing (hidden in menus/pause)
+  ui.helpButton.classList.toggle("hidden", !game.active || game.paused);
 }
 
 function renderMeta() {

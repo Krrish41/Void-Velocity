@@ -179,8 +179,8 @@ canvas {
   overflow-y: auto;
 }
 
-.overlay.hidden {
-  display: none;
+.hidden {
+  display: none !important;
 }
 
 .modal {
