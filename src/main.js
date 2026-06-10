@@ -389,7 +389,17 @@ function update(dt) {
     const hx = hazard.x * width;
     const hy = hazard.y * height;
     if (hy > height + 80) return false;
-    if (Math.hypot(hx - shipX, hy - shipY) < hazard.r * scale * 0.72 + shipHitRadius) {
+    
+    let hit = false;
+    if (hazard.type === "laser") {
+      hit = collidesCircleRectangle(shipX, shipY, shipHitRadius, hx, hy, 152 * scale, 12 * scale, hazard.rot);
+    } else if (hazard.type === "satellite") {
+      hit = collidesCircleRectangle(shipX, shipY, shipHitRadius, hx, hy, 108 * scale, 24 * scale, hazard.rot);
+    } else {
+      hit = Math.hypot(hx - shipX, hy - shipY) < hazard.r * scale * 0.72 + shipHitRadius;
+    }
+
+    if (hit) {
       collideHazard(hazard);
       return false;
     }
@@ -725,6 +735,27 @@ function loop(now) {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function collidesCircleRectangle(cx, cy, cr, rx, ry, w, h, angle) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  const dx = cx - rx;
+  const dy = cy - ry;
+  
+  const localX = dx * cos + dy * sin;
+  const localY = -dx * sin + dy * cos;
+  
+  const halfW = w / 2;
+  const halfH = h / 2;
+  
+  const closestX = clamp(localX, -halfW, halfW);
+  const closestY = clamp(localY, -halfH, halfH);
+  
+  const distX = localX - closestX;
+  const distY = localY - closestY;
+  
+  return (distX * distX + distY * distY) < cr * cr;
 }
 
 function gameScale(width) {
