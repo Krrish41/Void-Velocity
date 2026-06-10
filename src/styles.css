@@ -162,6 +162,21 @@ canvas {
   backdrop-filter: blur(10px);
 }
 
+.pause-button {
+  position: absolute;
+  left: 14px;
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 62px);
+  z-index: 2;
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-color: rgba(56, 214, 232, 0.42);
+  background: rgba(6, 16, 24, 0.78);
+  color: var(--cyan);
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
 .icon {
   font-size: 0.74rem;
   letter-spacing: 0;
@@ -444,6 +459,14 @@ canvas {
 
   .help-button {
     right: 8px;
+    bottom: calc(max(7px, env(safe-area-inset-bottom)) + 52px);
+    width: 36px;
+    min-height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .pause-button {
+    left: 8px;
     bottom: calc(max(7px, env(safe-area-inset-bottom)) + 52px);
     width: 36px;
     min-height: 36px;

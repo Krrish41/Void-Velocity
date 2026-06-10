@@ -21,6 +21,7 @@ const ui = {
   startButton: document.getElementById("startButton"),
   howToButton: document.getElementById("howToButton"),
   helpButton: document.getElementById("helpButton"),
+  pauseButton: document.getElementById("pauseButton"),
   boostButton: document.getElementById("boostButton"),
   shieldButton: document.getElementById("shieldButton"),
   leftLane: document.getElementById("leftLane"),
@@ -206,8 +207,37 @@ function showIntro() {
   ui.overlay.classList.remove("hidden");
 }
 
+function showPause() {
+  helpOpen = false;
+  resumeAfterHelp = false;
+  if (game.active && !game.ended) game.paused = true;
+  ui.overlayTitle.textContent = "Run Paused";
+  ui.overlayCopy.innerHTML = `
+    <div style="text-align: center; font-size: 0.95rem; line-height: 1.6; padding: 10px 0;">
+      <p style="margin: 0 0 14px 0; color: var(--muted);">Your cargo vessel is holding position in the void.</p>
+      <div style="display: flex; justify-content: space-around; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); border-radius: 8px; padding: 12px;">
+        <div style="text-align: center;">
+          <span style="font-size: 0.72rem; color: var(--muted); text-transform: uppercase;">Distance</span>
+          <div style="font-weight: bold; font-size: 1.1rem; color: var(--text); margin-top: 2px;">${Math.floor(game.distance)} m</div>
+        </div>
+        <div style="text-align: center; border-left: 1px solid var(--line); padding-left: 20px; border-right: 1px solid var(--line); padding-right: 20px;">
+          <span style="font-size: 0.72rem; color: var(--muted); text-transform: uppercase;">Fuel</span>
+          <div style="font-weight: bold; font-size: 1.1rem; color: var(--green); margin-top: 2px;">${Math.max(0, Math.floor((game.fuel / getStats().maxFuel) * 100))}%</div>
+        </div>
+        <div style="text-align: center;">
+          <span style="font-size: 0.72rem; color: var(--muted); text-transform: uppercase;">Hull</span>
+          <div style="font-weight: bold; font-size: 1.1rem; color: var(--rose); margin-top: 2px;">${Math.max(0, Math.floor(game.hull))}%</div>
+        </div>
+      </div>
+    </div>
+  `;
+  ui.startButton.textContent = "Resume Run";
+  ui.howToButton.textContent = "How to Play";
+  ui.overlay.classList.remove("hidden");
+}
+
 function showHowTo() {
-  resumeAfterHelp = game.active && !game.ended && !game.paused;
+  resumeAfterHelp = game.active && !game.ended;
   if (game.active && !game.ended) game.paused = true;
   helpOpen = true;
   ui.overlayTitle.textContent = "How to Play";
@@ -243,6 +273,10 @@ function showHowTo() {
 }
 
 function handlePrimaryButton() {
+  if (game.active && !game.ended && game.paused) {
+    resumeRun();
+    return;
+  }
   if (helpOpen && resumeAfterHelp) {
     resumeRun();
     return;
@@ -252,8 +286,11 @@ function handlePrimaryButton() {
 
 function handleSecondaryButton() {
   if (helpOpen) {
-    if (resumeAfterHelp) resumeRun();
-    else showIntro();
+    if (resumeAfterHelp) {
+      showPause();
+      return;
+    }
+    showIntro();
     return;
   }
   showHowTo();
@@ -679,8 +716,9 @@ function renderGameUi() {
   ui.boostButton.disabled = !game.active || game.paused || game.boostCooldown > 0;
   ui.shieldButton.disabled = !game.active || game.paused || game.shieldCooldown > 0;
   
-  // Toggle help button visibility based on whether a run is actively playing (hidden in menus/pause)
+  // Toggle pause/help buttons visibility based on whether a run is actively playing (hidden in menus/pause)
   ui.helpButton.classList.toggle("hidden", !game.active || game.paused);
+  ui.pauseButton.classList.toggle("hidden", !game.active || game.paused);
 }
 
 function renderMeta() {
@@ -819,6 +857,12 @@ function bindControls() {
     if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") setDirection(1);
     if (event.key === " " || event.key.toLowerCase() === "w") activateBoost();
     if (event.key.toLowerCase() === "s") activateShield();
+    if (event.key.toLowerCase() === "p" || event.key === "Escape") {
+      if (game.active && !game.ended) {
+        if (game.paused) resumeRun();
+        else showPause();
+      }
+    }
   });
   window.addEventListener("keyup", (event) => {
     if (["arrowleft", "arrowright", "a", "d"].includes(event.key.toLowerCase())) setDirection(0);
@@ -837,6 +881,7 @@ function bindControls() {
   ui.startButton.addEventListener("click", handlePrimaryButton);
   ui.howToButton.addEventListener("click", handleSecondaryButton);
   ui.helpButton.addEventListener("click", showHowTo);
+  ui.pauseButton.addEventListener("click", showPause);
 
   document.querySelectorAll(".tab").forEach((button) => {
     button.addEventListener("click", () => {
